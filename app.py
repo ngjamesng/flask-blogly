@@ -17,22 +17,30 @@ db.create_all()
 
 
 @app.route("/")
-def show_home():
-    # TODO: GRAB USER LIST first name, last name
-    # pass user list into render_template
+def redirect_user_list():
+    return redirect("/users")
+
+
+@app.route("/users")
+def show_users():
+    """ Show user list """
 
     users = User.query.all()
 
     return render_template("index.html", users=users)
 
 
-@app.route("/user_form")
+@app.route("/users/new")
 def show_new_user_form():
+    """ Show new user form """
+
     return render_template("new-user-form.html")
 
 
-@app.route("/user_form", methods=["POST"])
+@app.route("/users/new", methods=["POST"])
 def create_new_user():
+    """ Handle post / update database with new user """
+
     first_name = request.form["first-name"]
     last_name = request.form["last-name"]
     img_url = request.form.get(
@@ -45,27 +53,30 @@ def create_new_user():
     db.session.add(user)
     db.session.commit()
 
-    return redirect(f"/user/{user.id}")
+    return redirect(f"/users/{user.id}")
 
 
-@app.route("/user/<int:user_id>")
+@app.route("/users/<int:user_id>")
 def show_user(user_id):
+    """ Show user """
 
     user = User.query.get(user_id)
 
     return render_template("user-page.html", user=user)
 
 
-@app.route("/edit_user/<int:user_id>")
+@app.route("/users/<int:user_id>/edit")
 def show_edit_user_form(user_id):
+    """ Show edit user form """
 
     user = User.query.get(user_id)
 
     return render_template("edit-user.html", user=user)
 
 
-@app.route("/edit_user/<int:user_id>", methods=["POST"])
+@app.route("/users/<int:user_id>/edit", methods=["POST"])
 def update_user(user_id):
+    """ Handle post / update user in database with new info """
 
     first_name = request.form["first-name"]
     last_name = request.form["last-name"]
@@ -73,16 +84,22 @@ def update_user(user_id):
 
     # ADDS NEW USER
     user = User.query.get(user_id)
-    # user.update({first_name: first_name, last_name: last_name, img_url: img_url})
-    # db.session.commit()
-
-    # db.session.query.get(user_id).update({first_name: first_name, last_name: last_name, img_url: img_url})
-    # db.session.commit()
-
     user.first_name = first_name
     user.last_name = last_name
     user.img_url = img_url
-    # need to update DB, test and see if this updates correctly
+
+    # need to update DB
     db.session.commit()
 
-    return redirect(f"/user/{user_id}")
+    return redirect(f"/users/{user_id}")
+
+
+@app.route("/users/<int:user_id>/delete", methods=["POST"])
+def delete_user(user_id):
+    """ Handle Post / Delete user """
+
+    user = User.query.get(user_id)
+    db.session.delete(user)
+    db.session.commit()
+
+    return redirect('/users')

@@ -4,14 +4,15 @@
 
 {% block content %}
 
-<div class="media">
+<div class="media m-2">
     <img src="{{ user.img_url }}" width="150px" height="150px" class="mr-3 my-2" alt="User Photo">
     <div class="media-body">
         <h2 class="mt-1">{{ user.first_name }} {{ user.last_name }}</h2>
-        <a href="/edit_user/{{user.id}}" class="btn btn-primary">Edit</a>
-        <!-- TODO - ADD DELETE BUTTON AND FUNCTIONALITY
-        <a href="/edit_user/{{user.id}}" class="btn btn-primary">Delete</a>
-        -->        
+        <form action="/users/{{user.id}}/delete" method="POST">
+            <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
+            <button class="btn btn-danger">Delete</button>
+            <a href="/users" class="btn btn-secondary">Home</a>
+        </form>
     </div>
 </div>
 

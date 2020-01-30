@@ -7,13 +7,13 @@
     <h1>Users</h1>
     <div class="list-group container">
         {% for user in users %}
-        <a href="user/{{user.id}}" class="list-group-item list-group-item-action my-2">
+        <a href="users/{{user.id}}" class="list-group-item list-group-item-action my-2">
             {{user.first_name}} {{user.last_name}}
         </a>
         {% endfor %}
     </div>
 
-<a class="btn btn-secondary mt-2" href="/user_form" role="button">Add User</a>
+<a class="btn btn-secondary mt-2" href="/users/new" role="button">Add User</a>
 </div>
 
 {% endblock %}
