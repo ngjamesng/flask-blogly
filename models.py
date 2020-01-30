@@ -22,12 +22,12 @@ class User(db.Model):
 
         return f"<full name: {self.first_name} {self.last_name}>"
 
-    id = db.Column(db.Integer, primary_key=True, auto_increment=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     img_url = db.Column(
         db.String(),
         nullable=False,
-        default="https://image.shutterstock.com/image-vector/profile-blank-icon-empty-photo-260nw-535853269.jpg",
+        default="https://lh5.googleusercontent.com/proxy/OaJpLjuFWgu-G_S7mrkjo4NsR5UxtJx33u7hBANMTFSGFJFzqYfbZGvW25CnqgD0_TubCqZ61kM5VdOFrXVgshprgY-GjlHtpPHbA_WYCyuZJuJWiPnECwkK_QNFh8OnymsfxEVt81jd2Ja9w71FWwgs"
     )
 

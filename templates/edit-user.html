@@ -5,7 +5,7 @@
 {% block content %}
 
 <h1>Edit a user</h1>
-<form action="/user_form" method="POST">
+<form action="/edit_user/{{user.id}}" method="POST">
     <div class="form-group">
         <label for="first-name">First Name</label>
         <input required type="text" class="form-control" value="{{user.first_name}}" id="first-name" name="first-name">
@@ -18,7 +18,7 @@
         <label for="img-url">Image URL</label>
         <input type="url" class="form-control" value="{{user.img_url}}" id="img-url" name="img-url">
     </div>
-    <a href="user/{{user.id}}" class="btn btn-outline-info float-right">Cancel</a>
+    <a href="/user/{{user.id}}" class="btn btn-outline-info float-right">Cancel</a>
     <button type="submit" class="btn btn-success float-right">Save</button>
 </form>
 

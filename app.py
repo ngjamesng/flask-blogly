@@ -48,7 +48,7 @@ def create_new_user():
     return redirect(f"/user/{user.id}")
 
 
-@app.route("user/<int:user_id>")
+@app.route("/user/<int:user_id>")
 def show_user(user_id):
 
     user = User.query.get(user_id)
@@ -71,7 +71,13 @@ def update_user(user_id):
     last_name = request.form["last-name"]
     img_url = request.form.get("img-url", None)
 
+    # ADDS NEW USER
     user = User.query.get(user_id)
+    # user.update({first_name: first_name, last_name: last_name, img_url: img_url})
+    # db.session.commit()
+
+    # db.session.query.get(user_id).update({first_name: first_name, last_name: last_name, img_url: img_url})
+    # db.session.commit()
 
     user.first_name = first_name
     user.last_name = last_name
@@ -79,4 +85,4 @@ def update_user(user_id):
     # need to update DB, test and see if this updates correctly
     db.session.commit()
 
-    return redirect(f"/user/{user.id}")
+    return redirect(f"/user/{user_id}")
