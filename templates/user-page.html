@@ -16,4 +16,14 @@
     </div>
 </div>
 
+</section class="mt-2">
+<h3>Posts</h3>
+    <ul>
+        {% for post in posts %}
+        <li> {{ post.title }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/users/{{ user.id }}/posts/new" class="btn btn-primary">Add Post</a>
+<section>
+
 {% endblock %}
