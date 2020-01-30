@@ -84,7 +84,6 @@ def update_user(user_id):
     first_name = request.form["first-name"]
     last_name = request.form["last-name"]
     img_url = request.form['img-url'] or default_img_url
-    
 
     # Edit USER
     user = User.query.get(user_id)
@@ -123,8 +122,8 @@ def show_create_post_form(user_id):
 @app.route("/users/<int:user_id>/posts/new", methods=['POST'])
 def create_new_post(user_id):
     """" handle post route for new posts """
-    title = request.form['title']
-    content = request.form['content']
+    title = request.form["title"]
+    content = request.form["content"]
 
     post = Post(title=title, content=content, user_id=user_id)
     db.session.add(post)
@@ -136,8 +135,48 @@ def create_new_post(user_id):
 @app.route('/posts/<int:post_id>')
 def show_post(post_id):
     """ show post page"""
+
+    print("POST ID>>>>>>>>>>>", post_id)
     post = Post.query.get_or_404(post_id)
+    print("POSTTTTTTT >>>>", post)
     user = post.user
 
     return render_template("post-page.html", post=post, user=user)
 
+
+@app.route('/posts/<int:post_id>/edit')
+def show_edit_post_form(post_id):
+    """ show post edit form"""
+
+    post = Post.query.get_or_404(post_id)
+
+    return render_template("edit-post.html", post=post)
+
+
+@app.route('/posts/<int:post_id>/edit', methods=['POST'])
+def update_post(post_id):
+    """ handle edit post form """
+
+    post = Post.query.get_or_404(post_id)
+    post.title = request.form['title']
+    post.content = request.form['content']
+
+    # Do we need this?
+    # post.title = title
+    # post.content = content
+
+    db.session.commit()
+
+    return redirect(f'/posts/{post_id}')
+
+
+@app.route('/posts/<int:post_id>/delete', methods=['POST'])
+def delete_post(post_id):
+    """ handle delete post request """
+
+    post = Post.query.get_or_404(post_id)
+    user = post.user
+    db.session.delete(post)
+    db.session.commit()
+
+    return redirect(f'/users/{user.id}')

@@ -1,9 +1,11 @@
 """Models for Blogly."""
 
+import datetime
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 default_img_url = "https://images.unsplash.com/photo-1580329503754-35ddb65d49a8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+
 
 def connect_db(app):
     """connects to database!"""
@@ -31,12 +33,13 @@ class User(db.Model):
         default=default_img_url
     )
 
+
 class Post(db.Model):
     """ post model"""
 
     __tablename__ = "posts"
-    
-    def __ repr__(self):
+
+    def __repr__(self):
         """show post title"""
 
         return f"<title of post: {self.title}>"
@@ -46,7 +49,8 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     # need to check if date/timestamp works
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    # created_at = db.Column(db.TIMESTAMP(timezone=True), server_default=func.now())
-    user_id= db.Column(db.Integer, ForeignKey(User.id), primary_key=True)
-    
+    # created_at = db.Column(db.TIMESTAMP(timezone=True), server_default=text('now()'))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+
     user = db.relationship('User', backref='posts')
+

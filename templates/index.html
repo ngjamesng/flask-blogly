@@ -3,7 +3,7 @@
 {% block title %} Users Home {% endblock %}
 
 {% block content %}
-<div class="container">
+
     <h1>Users</h1>
     <div class="list-group container">
         {% for user in users %}
@@ -14,6 +14,5 @@
     </div>
 
 <a class="btn btn-secondary mt-2" href="/users/new" role="button">Add User</a>
-</div>
 
 {% endblock %}

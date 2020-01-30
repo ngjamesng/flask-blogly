@@ -3,7 +3,6 @@
 {% block title %} Edit User Form {% endblock %}
 
 {% block content %}
-<div class="container col-6">
     <h1>Edit a user</h1>
     <form action="/users/{{user.id}}/edit" method="POST">
         <div class="form-group">
@@ -22,6 +21,5 @@
         <a href="/users/{{user.id}}" class="btn btn-outline-info float-right mx-2">Cancel</a>
         <button type="submit" class="btn btn-success float-right">Save</button>
     </form>
-</div>
 
 {% endblock %}
