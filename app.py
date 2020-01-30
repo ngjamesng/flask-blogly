@@ -20,12 +20,15 @@ db.create_all()
 def show_home():
     # TODO: GRAB USER LIST first name, last name
     # pass user list into render_template
-    return render_template("index.html")
+
+    users = User.query.all()
+
+    return render_template("index.html", users=users)
 
 
 @app.route("/user_form")
 def show_new_user_form():
-    return render_template("new_user_form.html")
+    return render_template("new-user-form.html")
 
 
 @app.route("/user_form", methods=["POST"])
@@ -50,7 +53,7 @@ def show_user(user_id):
 
     user = User.query.get(user_id)
 
-    return render_template("user_page.html", user=user)
+    return render_template("user-page.html", user=user)
 
 
 @app.route("/edit_user/<int:user_id>")
