@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, request, redirect, render_template
-from models import db, connect_db, User
+from models import db, connect_db, User, default_img_url, Post
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -20,7 +20,8 @@ db.create_all()
 def redirect_user_list():
     return redirect("/users")
 
-
+######################################
+# user routes
 @app.route("/users")
 def show_users():
     """ Show user list """
@@ -43,9 +44,10 @@ def create_new_user():
 
     first_name = request.form["first-name"]
     last_name = request.form["last-name"]
-    img_url = request.form.get(
-        "img-url", None
-    )  # be aware of refactoring for later if none
+    # img_url = request.form.get(
+    #     "img-url", None
+    # )  # be aware of refactoring for later if none
+    img_url = request.form['img-url'] or None
 
     # send info to DB, then get ID
 
@@ -60,16 +62,17 @@ def create_new_user():
 def show_user(user_id):
     """ Show user """
 
-    user = User.query.get(user_id)
-
-    return render_template("user-page.html", user=user)
+    user = User.query.get_or_404(user_id)
+    posts = user.posts
+    # TODO: add posts into html
+    return render_template("user-page.html", user=user, posts=posts)
 
 
 @app.route("/users/<int:user_id>/edit")
 def show_edit_user_form(user_id):
     """ Show edit user form """
 
-    user = User.query.get(user_id)
+    user = User.query.get_or_404(user_id)
 
     return render_template("edit-user.html", user=user)
 
@@ -80,14 +83,14 @@ def update_user(user_id):
 
     first_name = request.form["first-name"]
     last_name = request.form["last-name"]
-    img_url = request.form.get("img-url", None)
+    img_url = request.form['img-url'] or default_img_url
+    
 
-    # ADDS NEW USER
+    # Edit USER
     user = User.query.get(user_id)
     user.first_name = first_name
     user.last_name = last_name
     user.img_url = img_url
-
     # need to update DB
     db.session.commit()
 
@@ -103,3 +106,38 @@ def delete_user(user_id):
     db.session.commit()
 
     return redirect('/users')
+
+
+######################################
+# post routes
+
+@app.route("/users/<int:user_id>/posts/new")
+def show_create_post_form(user_id):
+    """show create post form"""
+
+    user = User.query.get_or_404(user_id)
+
+    return render_template("new-post-form.html", user=user)
+
+
+@app.route("/users/<int:user_id>/posts/new", methods=['POST'])
+def create_new_post(user_id):
+    """" handle post route for new posts """
+    title = request.form['title']
+    content = request.form['content']
+
+    post = Post(title=title, content=content, user_id=user_id)
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect(f'/posts/{post.id}')
+
+
+@app.route('/posts/<int:post_id>')
+def show_post(post_id):
+    """ show post page"""
+    post = Post.query.get_or_404(post_id)
+    user = post.user
+
+    return render_template("post-page.html", post=post, user=user)
+

@@ -3,7 +3,7 @@
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-
+default_img_url = "https://images.unsplash.com/photo-1580329503754-35ddb65d49a8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
 
 def connect_db(app):
     """connects to database!"""
@@ -28,6 +28,25 @@ class User(db.Model):
     img_url = db.Column(
         db.String(),
         nullable=False,
-        default="https://lh5.googleusercontent.com/proxy/OaJpLjuFWgu-G_S7mrkjo4NsR5UxtJx33u7hBANMTFSGFJFzqYfbZGvW25CnqgD0_TubCqZ61kM5VdOFrXVgshprgY-GjlHtpPHbA_WYCyuZJuJWiPnECwkK_QNFh8OnymsfxEVt81jd2Ja9w71FWwgs"
+        default=default_img_url
     )
 
+class Post(db.Model):
+    """ post model"""
+
+    __tablename__ = "posts"
+    
+    def __ repr__(self):
+        """show post title"""
+
+        return f"<title of post: {self.title}>"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    # need to check if date/timestamp works
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    # created_at = db.Column(db.TIMESTAMP(timezone=True), server_default=func.now())
+    user_id= db.Column(db.Integer, ForeignKey(User.id), primary_key=True)
+    
+    user = db.relationship('User', backref='posts')
