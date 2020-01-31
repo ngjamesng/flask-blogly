@@ -20,14 +20,19 @@ class RoutesTestCase(TestCase):
         nicholai = User(first_name='Nicholai', last_name='Hansen')
         james = User(first_name='James', last_name='Ng')
 
-        # Add dummy posts
-        whiskey_post = Post(title='I\'m a dog', content='woof', user_id=1)
-        james_post = Post(title='Testing', content='Paragraph', user_id=3)
-
         # Add new users to session
         db.session.add(whiskey)
         db.session.add(nicholai)
         db.session.add(james)
+
+        # Commmit
+        db.session.commit()
+
+        # Add dummy posts
+        whiskey_post = Post(title='I\'m a dog',
+                            content='woof', user_id=whiskey.id)
+        james_post = Post(
+            title='Testing', content='Paragraph', user_id=james.id)
 
         # Add new posts
         db.session.add(whiskey_post)
@@ -162,5 +167,4 @@ class RoutesTestCase(TestCase):
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertNotIn('I\'m a dog', html)
-
+            self.assertNotIn('a dog', html)

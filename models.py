@@ -19,11 +19,6 @@ class User(db.Model):
 
     __tablename__ = "users"
 
-    def __repr__(self):
-        """Show user info"""
-
-        return f"<full name: {self.first_name} {self.last_name}>"
-
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
@@ -33,24 +28,28 @@ class User(db.Model):
         default=default_img_url
     )
 
+    def __repr__(self):
+        """Show user info"""
+
+        return f"<full name: {self.first_name} {self.last_name}>"
+
 
 class Post(db.Model):
     """ post model"""
 
     __tablename__ = "posts"
 
-    def __repr__(self):
-        """show post title"""
-
-        return f"<title of post: {self.title}>"
-
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    # need to check if date/timestamp works
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     # created_at = db.Column(db.TIMESTAMP(timezone=True), server_default=text('now()'))
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
     user = db.relationship('User', backref='posts')
+
+    def __repr__(self):
+        """show post title"""
+
+        return f"<title of post: {self.title}>"
 

@@ -44,9 +44,6 @@ def create_new_user():
 
     first_name = request.form["first-name"]
     last_name = request.form["last-name"]
-    # img_url = request.form.get(
-    #     "img-url", None
-    # )  # be aware of refactoring for later if none
     img_url = request.form['img-url'] or None
 
     # send info to DB, then get ID
@@ -64,7 +61,6 @@ def show_user(user_id):
 
     user = User.query.get_or_404(user_id)
     posts = user.posts
-    # TODO: add posts into html
     return render_template("user-page.html", user=user, posts=posts)
 
 
@@ -86,10 +82,11 @@ def update_user(user_id):
     img_url = request.form['img-url'] or default_img_url
 
     # Edit USER
-    user = User.query.get(user_id)
+    user = User.query.get_or_404(user_id)
     user.first_name = first_name
     user.last_name = last_name
     user.img_url = img_url
+    
     # need to update DB
     db.session.commit()
 
@@ -100,7 +97,7 @@ def update_user(user_id):
 def delete_user(user_id):
     """ Handle Post / Delete user """
 
-    user = User.query.get(user_id)
+    user = User.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()
 
@@ -136,12 +133,9 @@ def create_new_post(user_id):
 def show_post(post_id):
     """ show post page"""
 
-    print("POST ID>>>>>>>>>>>", post_id)
     post = Post.query.get_or_404(post_id)
-    print("POSTTTTTTT >>>>", post)
-    user = post.user
 
-    return render_template("post-page.html", post=post, user=user)
+    return render_template("post-page.html", post=post, user=post.user)
 
 
 @app.route('/posts/<int:post_id>/edit')
