@@ -22,11 +22,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
-    img_url = db.Column(
-        db.String(),
-        nullable=False,
-        default=default_img_url
-    )
+    img_url = db.Column(db.String(), nullable=False, default=default_img_url)
 
     def __repr__(self):
         """Show user info"""
@@ -46,10 +42,29 @@ class Post(db.Model):
     # created_at = db.Column(db.TIMESTAMP(timezone=True), server_default=text('now()'))
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
-    user = db.relationship('User', backref='posts')
+    user = db.relationship("User", backref="posts")
 
     def __repr__(self):
         """show post title"""
 
         return f"<title of post: {self.title}>"
 
+
+class Tag(db.Model):
+    """Tag model"""
+
+    __tablename__ = "tags"
+
+    def __repr__(self):
+        """ show tag """
+
+        return f"<tag name: {self.name}>"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(50), nullable=False)
+
+
+class PostTag(db.Model):
+    """PostTag model"""
+
+    __tablename__ = "PostTags"
