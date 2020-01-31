@@ -80,6 +80,12 @@ class RoutesTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn('Whiskey', html)
 
+        with app.test_client() as client:
+            resp = client.get('/users/69')
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 404)
+
     def test_show_edit_user_form(self):
         with app.test_client() as client:
             resp = client.get('/users/2/edit')
